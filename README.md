@@ -8,11 +8,19 @@ Built for the Solution Engineering team to manage projects, tasks, time tracking
 
 ## Quick Start
 
-### 1. Clone & Install
+### 1. Clone & Setup
 
 ```bash
 git clone https://github.com/austinsomer/rocketlane-cli.git
 cd rocketlane-cli
+
+# Validate environment and install
+bash setup.sh
+```
+
+The setup script checks for Python, pip, git, and offers to install the CLI automatically. If you'd rather install manually:
+
+```bash
 pip install -e .
 ```
 

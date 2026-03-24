@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rocketlane-cli"
+version = "0.1.0"
+description = "CLI tool for Rocketlane - Professional Services Automation"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+dependencies = [
+    "click>=8.1",
+    "httpx>=0.25",
+    "rich>=13.0",
+    "python-dotenv>=1.0",
+]
+
+[project.scripts]
+rocketlane = "rocketlane_cli.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pytest-httpx>=0.30"]
+
+[tool.setuptools.packages.find]
+include = ["rocketlane_cli*"]

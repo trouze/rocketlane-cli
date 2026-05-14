@@ -73,7 +73,7 @@ def get_task(ctx, task_id, as_json):
 def create_task(ctx, project_id, name, start_date, due_date, effort, phase_id, description, as_json):
     """Create a new task."""
     client = get_client(ctx)
-    body = {"projectId": project_id, "taskName": name}
+    body = {"project": {"projectId": project_id}, "taskName": name}
     if start_date:
         body["startDate"] = start_date
     if due_date:
@@ -81,7 +81,7 @@ def create_task(ctx, project_id, name, start_date, due_date, effort, phase_id, d
     if effort is not None:
         body["effort"] = effort
     if phase_id:
-        body["phaseId"] = phase_id
+        body["phase"] = {"phaseId": phase_id}
     if description:
         body["description"] = description
     data = client.post("/tasks", body)

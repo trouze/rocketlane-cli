@@ -53,7 +53,7 @@ def get_phase(ctx, phase_id, as_json):
 def create_phase(ctx, project_id, name, start_date, due_date, as_json):
     """Create a new phase."""
     client = get_client(ctx)
-    body = {"projectId": project_id, "phaseName": name}
+    body = {"project": {"projectId": project_id}, "phaseName": name}
     if start_date:
         body["startDate"] = start_date
     if due_date:

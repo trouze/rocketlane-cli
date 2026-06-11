@@ -6,21 +6,26 @@ Built for the Solution Engineering team to manage projects, tasks, time tracking
 
 ![Rocketlane CLI](assets/cli-screenshot.png)
 
-## Quick Start
+## Install
 
-### 1. Clone & Setup
+### Homebrew (recommended)
+
+```bash
+brew tap trouze/tap
+brew install rocketlane-cli
+```
+
+### pip
+
+```bash
+pip install rocketlane-cli
+```
+
+### From source
 
 ```bash
 git clone https://github.com/trouze/rocketlane-cli.git
 cd rocketlane-cli
-
-# Validate environment and install
-bash setup.sh
-```
-
-The setup script checks for Python, pip, git, and offers to install the CLI automatically. If you'd rather install manually:
-
-```bash
 pip install -e .
 ```
 

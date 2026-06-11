@@ -11,7 +11,7 @@ Built for the Solution Engineering team to manage projects, tasks, time tracking
 ### 1. Clone & Setup
 
 ```bash
-git clone https://github.com/austinsomer/rocketlane-cli.git
+git clone https://github.com/trouze/rocketlane-cli.git
 cd rocketlane-cli
 
 # Validate environment and install

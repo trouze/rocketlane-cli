@@ -10,3 +10,4 @@ rocketlane.env
 .venv/
 venv/
 .claude/settings.local.json
+*.har

@@ -37,6 +37,8 @@ from rocketlane_cli.commands.time_tracking import time_tracking
 from rocketlane_cli.commands.time_offs import time_offs
 from rocketlane_cli.commands.resource_allocations import resource_allocations
 from rocketlane_cli.commands.invoices import invoices
+from rocketlane_cli.commands.schema import schema
+from rocketlane_cli.commands.api import api
 
 
 # ── First-run setup ─────────────────────────────────────────────────────────
@@ -145,7 +147,7 @@ def cli(ctx, api_key, instance):
     ctx.obj["_api_key_override"] = api_key
 
     # First-run detection: no instances and no env override, and not running setup commands
-    skip_commands = ("add-instance", "instances", "configure", "switch")
+    skip_commands = ("add-instance", "instances", "configure", "switch", "schema")
     if ctx.invoked_subcommand not in skip_commands and not api_key:
         key = get_api_key()
         if key is None:
@@ -298,6 +300,8 @@ cli.add_command(time_tracking)
 cli.add_command(time_offs)
 cli.add_command(resource_allocations)
 cli.add_command(invoices)
+cli.add_command(schema)
+cli.add_command(api)
 
 
 def main():

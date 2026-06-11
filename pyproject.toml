@@ -24,3 +24,6 @@ dev = ["pytest>=7.0", "pytest-httpx>=0.30", "ruff>=0.4"]
 
 [tool.setuptools.packages.find]
 include = ["rocketlane_cli*"]
+
+[tool.setuptools.package-data]
+rocketlane_cli = ["openapi.json"]

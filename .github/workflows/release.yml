@@ -29,7 +29,8 @@ jobs:
         run: |
           gh release create "$GITHUB_REF_NAME" \
             --title "rocketlane-cli $GITHUB_REF_NAME" \
-            --generate-notes
+            --generate-notes \
+          || gh release view "$GITHUB_REF_NAME" --json url -q .url
 
       - name: Compute tarball SHA256
         id: sha

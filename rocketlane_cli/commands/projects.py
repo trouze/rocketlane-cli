@@ -2,7 +2,6 @@
 
 import click
 
-from rocketlane_cli.client import RocketlaneClient
 from rocketlane_cli.cli_utils import get_client
 from rocketlane_cli.ui.output import render_json, render_table, render_detail
 
@@ -148,7 +147,7 @@ def add_members(ctx, project_id, emails):
     client = get_client(ctx)
     email_list = [e.strip() for e in emails.split(",")]
     body = {"members": [{"emailId": e} for e in email_list]}
-    data = client.post(f"/projects/{project_id}/members", body)
+    client.post(f"/projects/{project_id}/members", body)
     click.echo(click.style(f"  ✓ Added {len(email_list)} member(s) to project #{project_id}.", fg="green"))
 
 

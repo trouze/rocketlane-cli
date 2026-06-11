@@ -2,8 +2,6 @@
 
 from rich.console import Console
 from rich.text import Text
-from rich.panel import Panel
-from rich.columns import Columns
 
 from rocketlane_cli import __version__
 

@@ -7,4 +7,4 @@ test:
 	uv run pytest tests/
 
 lint:
-	uv run ruff check rocketlane_cli/ || true
+	uv run ruff check rocketlane_cli/

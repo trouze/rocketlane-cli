@@ -44,7 +44,7 @@ def render_table(
         border_style=RL_DIM,
         header_style=f"bold {RL_ACCENT}",
         title_style=f"bold {RL_BLUE}",
-        row_styles=["", f"dim"],
+        row_styles=["", "dim"],
         pad_edge=True,
         expand=False,
     )

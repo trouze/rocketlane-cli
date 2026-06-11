@@ -181,7 +181,7 @@ def cmd_switch():
     for idx, name in enumerate(names, 1):
         inst = instances[name]
         url = inst.get("url", "")
-        marker = f"[bold green] ● [/]" if name == active else "   "
+        marker = "[bold green] ● [/]" if name == active else "   "
         url_display = f" [{RL_DIM}]({url})[/]" if url else ""
         console.print(f"  {marker}[bold]{idx}[/]. [{RL_BLUE}]{name}[/]{url_display}")
 

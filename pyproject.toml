@@ -20,7 +20,7 @@ dependencies = [
 rocketlane = "rocketlane_cli.cli:main"
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0", "pytest-httpx>=0.30"]
+dev = ["pytest>=7.0", "pytest-httpx>=0.30", "ruff>=0.4"]
 
 [tool.setuptools.packages.find]
 include = ["rocketlane_cli*"]

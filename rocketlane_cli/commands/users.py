@@ -2,7 +2,6 @@
 
 import click
 
-from rocketlane_cli.client import RocketlaneClient
 from rocketlane_cli.cli_utils import get_client
 from rocketlane_cli.ui.output import render_json, render_table, render_detail
 

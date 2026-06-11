@@ -21,7 +21,6 @@ import os
 from pathlib import Path
 from typing import Any
 
-import click
 
 CONFIG_DIR = Path.home() / ".rocketlane"
 CONFIG_FILE = CONFIG_DIR / "config.json"

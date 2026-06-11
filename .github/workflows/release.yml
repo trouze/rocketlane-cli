@@ -36,7 +36,8 @@ jobs:
         id: sha
         run: |
           URL="https://github.com/${{ github.repository }}/archive/refs/tags/${{ github.ref_name }}.tar.gz"
-          SHA=$(curl -sL "$URL" | sha256sum | awk '{print $1}')
+          curl -L "$URL" -o /tmp/release.tar.gz
+          SHA=$(sha256sum /tmp/release.tar.gz | awk '{print $1}')
           echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
 
   update-tap:

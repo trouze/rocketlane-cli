@@ -3,23 +3,83 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import sys
 from pathlib import Path
 
 import httpx
 
-SPEC_URL = (
-    "https://developer.rocketlane.com"
-    "/rocketlanev4/api-next/v2/branches/1.3/reference/get-phase"
-)
+DOCS_PAGE = "https://developer.rocketlane.com/reference/create-comment"
+REGISTRY_BASE = "https://dash.readme.com/api/v1/api-registry"
 SPEC_FILE = Path(__file__).parent.parent / "rocketlane_cli" / "openapi.json"
+PATCHES_FILE = Path(__file__).parent / "patches.json"
+
+
+def _discover_registry_id() -> str:
+    """Extract the current registry ID from oasPublicUrl embedded in the ReadMe page HTML.
+
+    ReadMe embeds a JSON config in the page source containing:
+      "oasPublicUrl":"@<project>/v<ver>#<registry-id>"
+    The fragment after # is the ID passed to the registry API.
+    """
+    import re
+    resp = httpx.get(DOCS_PAGE, timeout=30)
+    resp.raise_for_status()
+    match = re.search(r'"oasPublicUrl"\s*:\s*"[^"]*#([a-z0-9]+)"', resp.text)
+    if not match:
+        raise RuntimeError("Could not find oasPublicUrl in developer.rocketlane.com page source")
+    return match.group(1)
 
 
 def fetch_spec() -> dict:
-    resp = httpx.get(SPEC_URL, params={"reduce": "false"}, timeout=30)
+    registry_id = _discover_registry_id()
+    print(f"Registry ID: {registry_id}")
+    resp = httpx.get(f"{REGISTRY_BASE}/{registry_id}", timeout=30)
     resp.raise_for_status()
-    return resp.json()["data"]["api"]["schema"]
+    return resp.json()
+
+
+def apply_patches(spec: dict) -> dict:
+    """Deep-merge PATCHES_FILE into spec for endpoints not covered by the official spec."""
+    if not PATCHES_FILE.exists():
+        return spec
+
+    patches = json.loads(PATCHES_FILE.read_text())
+    if not patches:
+        return spec
+
+    result = copy.deepcopy(spec)
+
+    # Merge paths
+    for path, methods in patches.get("paths", {}).items():
+        if path not in result["paths"]:
+            result["paths"][path] = methods
+            print(f"  ~ patch   added path {path}")
+        else:
+            for method, operation in methods.items():
+                if method not in result["paths"][path]:
+                    result["paths"][path][method] = operation
+                    print(f"  ~ patch   added {method.upper()} {path}")
+                else:
+                    # Merge parameters and requestBody into existing operation
+                    existing = result["paths"][path][method]
+                    for param in operation.get("parameters", []):
+                        names = {p["name"] for p in existing.get("parameters", [])}
+                        if param["name"] not in names:
+                            existing.setdefault("parameters", []).append(param)
+                            print(f"  ~ patch   added param {param['name']} to {method.upper()} {path}")
+                    if "requestBody" in operation and "requestBody" not in existing:
+                        existing["requestBody"] = operation["requestBody"]
+                        print(f"  ~ patch   added requestBody to {method.upper()} {path}")
+
+    # Merge component schemas
+    patch_schemas = patches.get("components", {}).get("schemas", {})
+    if patch_schemas:
+        result.setdefault("components", {}).setdefault("schemas", {}).update(patch_schemas)
+        print(f"  ~ patch   merged {len(patch_schemas)} component schema(s)")
+
+    return result
 
 
 def _body_props(operation: dict) -> set[str]:
@@ -98,12 +158,14 @@ def diff_spec(old: dict, new: dict) -> bool:
 
 
 def main() -> int:
-    print("Fetching spec from developer.rocketlane.com...")
+    print("Fetching spec from dash.readme.com...")
     try:
         new_spec = fetch_spec()
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
         return 1
+
+    new_spec = apply_patches(new_spec)
 
     path_count = len(new_spec.get("paths", {}))
     schema_count = len(new_spec.get("components", {}).get("schemas", {}))
